@@ -6,7 +6,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Todo App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primaryColor: Colors.blue,
+        brightness: Brightness.dark
       ),
+      darkTheme: ThemeData(),
       home: HomePage(),
     );
   }
