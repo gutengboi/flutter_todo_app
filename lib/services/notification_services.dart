@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotifyHelper {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
   initializeNotification() async {
+    tz.initializeTimeZones();
     const DarwinInitializationSettings initializationSettingsIOS =
     DarwinInitializationSettings(
       requestSoundPermission: false,
@@ -29,6 +32,62 @@ class NotifyHelper {
     );
   }
 
+  displayNotification({required String title, required String body}) async {
+    print("doing test");
+
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'your channel id',
+      'your channel name',
+      channelDescription: 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'It could be anything you pass',
+    );
+  }
+
+  scheduledNotification() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'scheduled title',
+      'theme changes 5 seconds ago',
+      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your channel id',
+          'your channel name',
+          channelDescription: 'your channel description',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, // Use the updated parameter
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+    );
+  }
+
+  void requestIOSPermissions() {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
   // Handle notification taps
   void onDidReceiveNotificationResponse(NotificationResponse response) {
     final payload = response.payload;
@@ -44,20 +103,7 @@ class NotifyHelper {
   void handleLocalNotificationDialog(
       int id, String? title, String? body, String? payload) {
     Get.dialog(
-      Text("welcome to flutter")
-      // AlertDialog(
-      //   title: Text(title ?? "Notification"),
-      //   content: Text(body ?? "You have received a notification."),
-      //   actions: [
-      //     TextButton(
-      //       child: const Text("OK"),
-      //       onPressed: () {
-      //         Get.back();
-      //         Get.to(() => Container(color: Colors.white));
-      //       },
-      //     ),
-      //   ],
-      // ),
+      Text("welcome to flutter"),
     );
   }
 }
