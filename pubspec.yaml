@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   get_storage:
   get:
+  intl:
+  google_fonts:
+  date_picker_timeline:
   flutter_local_notifications:
   flutter_native_timezone_updated_gradle: ^2.0.3
 
