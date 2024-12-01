@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
           notifyHelper.scheduledNotification();
         },
         child: Icon(Get.isDarkMode ? Icons.wb_sunny_outlined:Icons.nightlight_round,
-        size: 20,
+        size: 25,
         color:  Get.isDarkMode ? Colors.white:Colors.black,),
       ),
       actions: [
