@@ -16,6 +16,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
   String _endTime = "9:30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
+  int _selectedRemind = 5;
+  List<int> remindList=[
+    5,10,15,20
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +87,28 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       ),
                     )),
               ],
+            ),
+            MyInPutField(title: "Remind", hint: "$_selectedRemind minutes early",
+            widget: DropdownButton(
+              icon: Icon(Icons.keyboard_arrow_down,
+              color: Colors.grey,
+              ),
+                iconSize: 32,
+                elevation: 4,
+                style: subTitleStyle,
+                underline: Container(height: 0,),
+                items: remindList.map<DropdownMenuItem<String>>((int value){
+                  return DropdownMenuItem<String>(
+                    value: value.toString(),
+                      child: Text(value.toString())
+                  );
+                }
+                ).toList(),
+                onChanged: (String? newValue){
+                setState(() {
+                  _selectedRemind = int.parse(newValue!);
+                });
+                } ),
             )
           ]),
         ),
