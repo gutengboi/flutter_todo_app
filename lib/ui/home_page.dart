@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       body: Column(
         children: [
           _addTaskBar(),

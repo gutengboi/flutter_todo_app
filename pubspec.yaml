@@ -42,6 +42,7 @@ dependencies:
   date_picker_timeline:
   flutter_local_notifications:
   flutter_native_timezone_updated_gradle: ^2.0.3
+  sqflite:
 
 dev_dependencies:
   flutter_test:
