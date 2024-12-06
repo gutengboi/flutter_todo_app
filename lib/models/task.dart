@@ -28,7 +28,8 @@ class Task {
     title = json['title'];
     note = json['note'];
     isCompleted = json['isCompleted'];
-    date = json['startTime'];
+    date = json['date'];
+    startTime = json['startTime'];
     endTime = json['endTime'];
     color = json['color'];
     remind = json['remind'];
