@@ -44,6 +44,7 @@ dependencies:
   flutter_native_timezone_updated_gradle: ^2.0.3
   sqflite:
   flutter_staggered_animations:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:
