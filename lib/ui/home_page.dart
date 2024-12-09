@@ -289,7 +289,7 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         CircleAvatar(
-          backgroundImage: AssetImage("images/person.png"),
+          backgroundImage: AssetImage("assets/images/person.png"),
         ),
         SizedBox(
           width: 20,

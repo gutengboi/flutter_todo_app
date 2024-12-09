@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone_updated_gradle/flutter_native_timezone.dart';
+import 'package:flutter_todo_app/ui/notified_page.dart';
 import 'package:get/get.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -73,64 +74,65 @@ class NotifyHelper {
       title,
       body,
       platformChannelSpecifics,
-      payload: 'It could be anything you pass',
+      payload: title,
+    );
+  }
+
+  scheduledNotification(int hour, int minutes, Task task) async {
+
+    final scheduledTime = _convertTime(hour, minutes);
+    print("Scheduled notification time: $scheduledTime");
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      task.id!.toInt(),
+      task.title,
+      task.note,
+      _convertTime(hour, minutes),
+      //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your channel id',
+          'your channel name',
+          channelDescription: 'your channel description',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, // Use the updated parameter
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: "${task.title}|"+"${task.note}|"
     );
   }
 
   // scheduledNotification(int hour, int minutes, Task task) async {
-  //
-  //   final scheduledTime = _convertTime(hour, minutes);
-  //   print("Scheduled notification time: $scheduledTime");
-  //   await flutterLocalNotificationsPlugin.zonedSchedule(
-  //     task.id!.toInt(),
-  //     task.title,
-  //     task.note,
-  //     _convertTime(hour, minutes),
-  //     //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-  //     const NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         'your channel id',
-  //         'your channel name',
-  //         channelDescription: 'your channel description',
-  //         importance: Importance.max,
-  //         priority: Priority.high,
+  //   try {
+  //     final scheduledTime = _convertTime(hour, minutes);
+  //     print("Scheduled notification time: $scheduledTime");
+  //     await flutterLocalNotificationsPlugin.zonedSchedule(
+  //       task.id!.toInt(),
+  //       task.title,
+  //       task.note,
+  //       scheduledTime,
+  //       const NotificationDetails(
+  //         android: AndroidNotificationDetails(
+  //           'your_channel_id',
+  //           'Your Channel Name',
+  //           channelDescription: 'This channel is used for important notifications.',
+  //           importance: Importance.max,
+  //           priority: Priority.high,
+  //         ),
   //       ),
-  //     ),
-  //     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle, // Use the updated parameter
-  //     uiLocalNotificationDateInterpretation:
-  //     UILocalNotificationDateInterpretation.absoluteTime,
-  //     matchDateTimeComponents: DateTimeComponents.time
-  //   );
+  //       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  //       uiLocalNotificationDateInterpretation:
+  //       UILocalNotificationDateInterpretation.absoluteTime,
+  //       matchDateTimeComponents: DateTimeComponents.time,
+  //     );
+  //     print("Notification successfully scheduled");
+  //   } catch (e) {
+  //     print("Error scheduling notification: $e");
+  //   }
   // }
-
-  scheduledNotification(int hour, int minutes, Task task) async {
-    try {
-      final scheduledTime = _convertTime(hour, minutes);
-      print("Scheduled notification time: $scheduledTime");
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        task.id!.toInt(),
-        task.title,
-        task.note,
-        scheduledTime,
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'your_channel_id',
-            'Your Channel Name',
-            channelDescription: 'This channel is used for important notifications.',
-            importance: Importance.max,
-            priority: Priority.high,
-          ),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
-      print("Notification successfully scheduled");
-    } catch (e) {
-      print("Error scheduling notification: $e");
-    }
-  }
 
   tz.TZDateTime _convertTime(int hour, int minutes) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
@@ -167,7 +169,12 @@ class NotifyHelper {
     } else {
       print("Notification Tapped without Payload");
     }
-    Get.to(() => Container(color: Colors.white));
+
+    if(payload== "Theme changed"){
+      print("Nothing to navigate to");
+    }else {
+      Get.to(() => NotifiedPage(label: payload));
+    }
   }
 
   // Method for displaying a dialog in iOS (if needed)
